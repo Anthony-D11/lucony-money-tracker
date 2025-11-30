@@ -1,0 +1,82 @@
+{
+  "transaction": [
+    {
+      "id": "001",
+      "type": "expense",
+      "amount": 100,
+      "currency": "US Dollar",
+      "category": "housing",
+      "date": "23/11/2025",
+      "note": ""
+    },
+    {
+      "id": "002",
+      "type": "income",
+      "amount": 500,
+      "currency": "US Dollar",
+      "category": "salary",
+      "date": "20/11/2025",
+      "note": ""
+    },
+    {
+      "id": "003",
+      "type": "expense",
+      "amount": 30,
+      "currency": "US Dollar",
+      "category": "food",
+      "date": "05/11/2025",
+      "note": ""
+    },
+    {
+      "id": "004",
+      "type": "expense",
+      "amount": 17,
+      "currency": "US Dollar",
+      "category": "phone",
+      "date": "20/11/2025",
+      "note": ""
+    },
+    {
+      "id": "005",
+      "type": "investment",
+      "amount": 1000,
+      "currency": "USD",
+      "category": "crypto",
+      "price": "85000",
+      "exchange_rate": "USD/BTC",
+      "date": "15/11/2025",
+      "note": ""
+    },
+    {
+      "id": "006",
+      "type": "investment",
+      "amount": 500,
+      "currency": "USD",
+      "category": "gold",
+      "price": "4060",
+      "exchange_rate": "USD/oz",
+      "date": "09/11/2025",
+      "note": ""
+    },
+    {
+      "id": "007",
+      "type": "investment",
+      "amount": 500,
+      "currency": "USD",
+      "category": "crypto",
+      "price": "3800",
+      "exchange_rate": "USD/ETH",
+      "date": "11/11/2025",
+      "note": ""
+    },
+    {
+      "id": "008",
+      "type": "income",
+      "amount": 350,
+      "currency": "US Dollar",
+      "category": "other",
+      "date": "21/11/2025",
+      "note": ""
+    }
+  ]
+}
