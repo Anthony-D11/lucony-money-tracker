@@ -1,0 +1,42 @@
+{
+  "categoryIcons": [
+    "tshirt-crew-outline",
+    "shield-cross-outline",
+    "cellphone",
+    "monitor-cellphone",
+    "cart-outline",
+    "car-outline",
+    "soccer-field",
+    "bicycle",
+    "bus-marker",
+    "food-fork-drink",
+    "greenhouse",
+    "dog",
+    "weather-lightning-rainy",
+    "magic-staff",
+    "bitcoin",
+    "hand-coin-outline"
+  ],
+  "colors": [
+    "#FF6B6B", 
+    "#FF9F43", 
+    "#FECA57", 
+    "#48DBFB", 
+    "#1DD1A1",
+    "#5F27CD", 
+    "#9C88FF", 
+    "#00D2D3", 
+    "#54A0FF", 
+    "#2E86DE",
+    "#F368E0", 
+    "#FF9FF3", 
+    "#00B894", 
+    "#0984E3", 
+    "#6C5CE7",
+    "#FD79A8", 
+    "#E17055", 
+    "#D63031", 
+    "#E84393", 
+    "#6AB04C"
+]
+}
