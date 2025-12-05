@@ -1,14 +1,14 @@
 module.exports = {
     colors: {
         background: {
-          primary: "#1a1a1a",
-          secondary: "#252525"
+          primary: "#0F0F0F",
+          secondary: "#272727"
         },
         text: {
-          primary: "#e0e0e0",
-          secondary: "#a0a0a0",
-          third: "#62748e",
-          link: "#51a2ff"
+          primary: "#F1F1F1",
+          secondary: "#AAAAAA",
+          third: "#717171",
+          link: "#3EA6FF"
         },
         border: "#333",
         brand: {
