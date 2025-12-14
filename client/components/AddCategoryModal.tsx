@@ -6,8 +6,12 @@ import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 
 import { colors } from "@/theme-config";
 import appData from "../assets/data/app_data.json";
+import { useRealm } from '@/contexts/RealmContext';
+import { Category } from '@/models';
 
 const AddCategoryModal = ({ transactionTypeIn, addCategoryModalVisible, setAddCategoryModalVisible }: any) => {
+  const realm = useRealm();
+
   const tabBarHeight = useBottomTabBarHeight();
   const [categoryName, setCategoryName] = useState("");
   const [categoryType, setCategoryType] = useState("default");
@@ -15,7 +19,9 @@ const AddCategoryModal = ({ transactionTypeIn, addCategoryModalVisible, setAddCa
   const [categoryIcon, setCategoryIcon] = useState("");
 
   const saveCategory = () => {
-    
+    realm.write(() => {
+      realm.create("Category", Category.generate(categoryName, categoryType, categoryColor, categoryIcon));
+    })
   }
 
   return (
@@ -34,7 +40,10 @@ const AddCategoryModal = ({ transactionTypeIn, addCategoryModalVisible, setAddCa
               <MaterialCommunityIcons name="chevron-left" size={35} color={colors.text.primary} />
             </Pressable>
             <Text className="text-lg font-bold text-text-primary">Add Category</Text>
-            <Pressable className="ms-auto me-3">
+            <Pressable className="ms-auto me-3" onPress={() => {
+                saveCategory();
+                setAddCategoryModalVisible(false);
+              }}>
               <Text className="text-lg font-bold text-text-link">Save</Text>
             </Pressable>
           </View>

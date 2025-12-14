@@ -5,43 +5,18 @@ import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 
 import { colors } from "@/theme-config";
-import { Category } from '@/models/models';
+import { Category } from '@/models';
 import AddCategoryModal from './AddCategoryModal';
+import { useQuery } from '@/contexts/RealmContext';
 
-const SelectCategoryModal = ({ transactionTypeIn, selectCategoryModalVisible, setSelectCategoryModalVisible }: any) => {
+const SelectCategoryModal = ({ transactionTypeIn, setSelectedCategory, selectCategoryModalVisible, setSelectCategoryModalVisible }: any) => {
   const tabBarHeight = useBottomTabBarHeight();
   const [addCategoryModalVisible, setAddCategoryModalVisible] = useState(false);
   const [transactionType, setTransactionType] = useState(transactionTypeIn);
   const [searchText, setSearchText] = useState("");
   const [isFocused, setIsFocused] = useState(false);
 
-
-  let existingCategories: Array<Category> = [
-    {
-      "id": "001",
-      "name": "Housing",
-      "icon": "greenhouse",
-      "color": "yellow",
-      "type": "default",
-      "default": true
-    },
-    {
-      "id": "002",
-      "name": "Car",
-      "icon": "car",
-      "color": "green",
-      "type": "default",
-      "default": true
-    },
-    {
-      "id": "003",
-      "name": "Crypto",
-      "icon": "bitcoin",
-      "color": "purple",
-      "type": "investment",
-      "default": true
-    }
-  ];
+  let existingCategories = useQuery("Category").sorted("name");
 
   return (
     <Modal
@@ -99,7 +74,7 @@ const SelectCategoryModal = ({ transactionTypeIn, selectCategoryModalVisible, se
             <View className=" flex flex-row items-center gap-1 px-3 py-1 w-full rounded-xl bg-background-secondary">
               <MaterialCommunityIcons name="tag-search-outline" size={24} color={colors.text.third} />
               <TextInput
-                  className=" flex-grow h-10 leading-[20px] text-xl font-base text-text-primary bg-background-secondary"
+                  className=" flex-grow h-[40px] leading-[20px] text-xl font-base text-text-primary bg-background-secondary"
                   placeholder="Search category"
                   placeholderTextColor={colors.text.third}
                   textContentType="none"
@@ -121,9 +96,14 @@ const SelectCategoryModal = ({ transactionTypeIn, selectCategoryModalVisible, se
               {existingCategories.map((item: Category, index: number) => (
                 <>
                   {index > 0 && (<View className=" w-full border-hairline border-border"></View>)}
-                  <Pressable className="flex flex-row items-center gap-3">
-                    <View className="w-[40px] h-[40px] justify-center items-center rounded-full bg-brand-blue">
-                      <MaterialCommunityIcons name={item.icon} size={24} colors={item.color}/>
+                  <Pressable className="flex flex-row items-center gap-3"
+                    onPress={() => {
+                      setSelectedCategory(item);
+                      setSelectCategoryModalVisible(false);
+                    }}
+                  >
+                    <View className="w-[40px] h-[40px] justify-center items-center rounded-full" style={{backgroundColor: item.color}}>
+                      <MaterialCommunityIcons name={item.icon} size={24} color={colors.text.primary}/>
                     </View>
                     <Text className="text-xl text-text-secondary">{item.name}</Text>
                   </Pressable>

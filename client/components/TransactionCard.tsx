@@ -1,10 +1,10 @@
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { View, Text } from 'react-native'
 import React from 'react'
-import { Expense, Income, Investment, Transaction } from '@/models/models'
+import { Expense, Earning, Investment, Transaction } from '@/models/models'
 import { colors } from "@/theme-config";
 
-const TransactionCard = ({ type, amount, currency, categoryId, createdAt, note }: Expense | Income | Investment) => {
+const TransactionCard = ({ type, amount, currency, categoryId, createdAt, note }: Expense | Earning | Investment) => {
     return (
         <View className='flex flex-row gap-3 justify-start items-center w-full p-4  rounded-xl border bg-background-secondary  hover:border-brand-blue'>
             <MaterialCommunityIcons name="shopping-outline" size={30} color={colors.text.secondary} />

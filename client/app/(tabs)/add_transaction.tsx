@@ -7,13 +7,16 @@ import { colors } from "@/theme-config";
 import SelectCategoryModal from '@/components/SelectCategoryModal';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import TransactionFrequencyModal from '@/components/TransactionFrequencyModal';
+import { Category } from '@/models';
 
 const AddTransaction = () => {
   const tabBarHeight = useBottomTabBarHeight();
   const [transactionType, setTransactionType] = useState("expense");
   const [selectCategoryModalVisible, setSelectCategoryModalVisible] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
   const [transactionFrequencyModalVisible, setTransactionFrequencyModalVisible] = useState(false);
   const [transactionDate, setTransactionDate] = useState(new Date());
+
   return (
     <SafeAreaView>
       <ScrollView showsVerticalScrollIndicator={false}
@@ -62,12 +65,12 @@ const AddTransaction = () => {
           />
           <View className=" w-full border-hairline border-border"></View>
           <View className="flex flex-row gap-4 w-full">
-            <DateTimePicker
+            {/* <DateTimePicker
               value={transactionDate}
               mode="date"
               display="compact"
               onChange={(event, date) => {console.log(event); setTransactionDate(date || transactionDate)}}
-            />
+            /> */}
             <Pressable className="flex-1 flex flex-row items-center ms-auto"
               onPress={() => setTransactionFrequencyModalVisible(true)}
             >
@@ -76,13 +79,15 @@ const AddTransaction = () => {
             </Pressable>
           </View>
           <View className=" w-full border-hairline border-border"></View>
-          <Pressable onPress={() => setSelectCategoryModalVisible(true)}>
-            <Text className="text-xl text-text-secondary">Select category  > </Text>
+          <Pressable className="flex flex-row items-center" onPress={() => setSelectCategoryModalVisible(true)}>
+            <Text className="text-xl text-text-secondary">{selectedCategory === null ? "Select category" : selectedCategory.name}</Text>
+            <MaterialCommunityIcons name="chevron-right" size={24} color={colors.text.secondary} />
           </Pressable>
         </View >
       </ScrollView>
       <SelectCategoryModal 
-        transactionTypeIn={"expense"} 
+        transactionTypeIn={"expense"}
+        setSelectedCategory={setSelectedCategory}
         selectCategoryModalVisible={selectCategoryModalVisible}
         setSelectCategoryModalVisible={setSelectCategoryModalVisible}
       />

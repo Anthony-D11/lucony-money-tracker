@@ -92,7 +92,7 @@ export default function Index() {
           </View>
           <View className="flex flex-col gap-3">
             <TransactionCard id="001" type="expense" amount={85.20} currency="$" categoryId="001" createdAt="Today" note="Dinner with Alex"/>
-            <TransactionCard id="001" type="income" amount={1285.20} currency="$" categoryId="001" createdAt="Today" note="Dinner with Alex"/>
+            <TransactionCard id="001" type="earning" amount={1285.20} currency="$" categoryId="001" createdAt="Today" note="Dinner with Alex"/>
             <TransactionCard id="001" type="expense" amount={7236.23} currency="$" categoryId="001" createdAt="Today" note="Dinner with Alex"/>
             <TransactionCard id="001" type="expense" amount={85.20} currency="$" categoryId="001" createdAt="Today" note="Dinner with Alex"/>
             <TransactionCard id="001" type="expense" amount={85.20} currency="$" categoryId="001" createdAt="Today" note="Dinner with Alex"/>
