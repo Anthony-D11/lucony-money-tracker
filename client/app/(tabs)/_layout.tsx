@@ -29,9 +29,8 @@ export default function _Layout() {
                 tabBarStyle: {
                     paddingHorizontal: 5,
                     paddingTop: 5,
-                    backgroundColor: "#1a1a1a",
-                    height: 80,
-                    borderColor: "#333"
+                    // backgroundColor: themeOptions.colors.background,
+                    height: 80
                 }
             }}
         >

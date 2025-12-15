@@ -7,15 +7,46 @@ import { colors } from "@/theme-config";
 import SelectCategoryModal from '@/components/SelectCategoryModal';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import TransactionFrequencyModal from '@/components/TransactionFrequencyModal';
-import { Category } from '@/models';
+import { Category, Transaction } from '@/models';
+import { useRealm } from '@/contexts/RealmContext';
 
 const AddTransaction = () => {
+  const realm = useRealm();
   const tabBarHeight = useBottomTabBarHeight();
   const [transactionType, setTransactionType] = useState("expense");
+  const [transactionAmount, setTransactionAmount] = useState<string>("0");
+  const [transactionCurrency, setTransactionCurrency] = useState("USD");
+  const [transactionNote, setTransactionNote] = useState("");
+  const [transactionInvestmentAction, setTransactionInvestmentAction] = useState<string | null>(null);
+  const [transactionInvestmentPrice, setTransactionInvestmentPrice] = useState<number | null>(null);
+  const [transactionInvestmentExchangeRate, setTransactionInvestmentExchangeRate] = useState<string | null>(null);
+
   const [selectCategoryModalVisible, setSelectCategoryModalVisible] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
+
   const [transactionFrequencyModalVisible, setTransactionFrequencyModalVisible] = useState(false);
+  
+  const [transactionFrequency, setTransactionFrequency] = useState<string>("never");
+  const [transactionFrequencyNumber, setTransactionFrequencyNumber] = useState<number | null>(1);
+
+  const [dateTimePickerModalVisible, setDateTimePickerModalVisible] = useState(false);
   const [transactionDate, setTransactionDate] = useState(new Date());
+
+  const saveTransaction = () => {
+    realm.write(() => {
+      realm.create("Transaction", Transaction.generate(
+        transactionType,
+        transactionAmount,
+        transactionCurrency,
+        selectedCategory!._id,
+        transactionDate,
+        transactionNote,
+        transactionInvestmentAction,
+        transactionInvestmentPrice,
+        transactionInvestmentExchangeRate
+      ));
+    })
+  }
 
   return (
     <SafeAreaView>
@@ -30,7 +61,7 @@ const AddTransaction = () => {
           paddingBottom: tabBarHeight + 50,
         }}
       >
-        <View className="flex flex-col justify-center items-center gap-3 p-4 w-full h-full bg-background-secondary rounded-xl border ">
+        <View className="flex flex-col justify-center items-center gap-3 p-4 w-full bg-background-secondary rounded-xl">
           <View className="flex flex-row gap-2 justify-center items-center p-1 w-full h-10 rounded-xl bg-background-primary">
             <Pressable className={`flex-grow justify-center items-center h-full ${transactionType === "expense" ? "bg-background-secondary": ""} rounded-xl`}
               onPress={() => setTransactionType("expense")}  
@@ -49,41 +80,54 @@ const AddTransaction = () => {
             </Pressable>
           </View>
           <TextInput
-            className="w-full h-20 leading-[65px] text-6xl text-center font-bold text-text-primary"
+            className="w-full h-[80px] leading-[65px] text-6xl text-center font-bold text-text-primary"
             keyboardType="numeric"
             placeholder="$0.00"
             placeholderTextColor={colors.text.secondary}
-            textContentType="none"
+            value={transactionAmount}
+            onChangeText={(text) => setTransactionAmount(text)}
           />
           <View className=" w-full border-hairline border-border"></View>
           <TextInput
-            className="w-full h-10 leading-[20px] text-xl font-base text-text-primary"
+            className="justify-start w-full h-[170px] leading-[20px] text-xl font-base text-text-primary"
             keyboardType="default"
             placeholder="Note (optional)"
             placeholderTextColor={colors.text.third}
-            textContentType="none"
+            multiline={true}
+            numberOfLines={7}
+            value={transactionNote}
+            onChangeText={(text) => setTransactionNote(text)}
+            style={{textAlignVertical: "top"}}
           />
           <View className=" w-full border-hairline border-border"></View>
           <View className="flex flex-row gap-4 w-full">
-            {/* <DateTimePicker
+            <Pressable className="p-3 rounded-xl bg-background-primary" onPress={() => setDateTimePickerModalVisible(true)}>
+              <Text className="text-xl text-text-primary">{transactionDate.toDateString()}</Text>
+            </Pressable>
+            {dateTimePickerModalVisible && <DateTimePicker
               value={transactionDate}
               mode="date"
-              display="compact"
-              onChange={(event, date) => {console.log(event); setTransactionDate(date || transactionDate)}}
-            /> */}
-            <Pressable className="flex-1 flex flex-row items-center ms-auto"
+              display="spinner"
+              onChange={(event, date) => {setTransactionDate(date || transactionDate); setDateTimePickerModalVisible(false)}}
+            />}
+            <Pressable className="flex flex-row justify-center items-center p-3 ms-auto rounded-xl bg-background-primary"
               onPress={() => setTransactionFrequencyModalVisible(true)}
             >
-                <Text className="text-xl text-text-secondary">Never repeat</Text>
+                <Text className="text-xl text-text-secondary">{transactionFrequency === "never" ? "Never repeat" : "Every " + (transactionFrequencyNumber! > 1 ? transactionFrequencyNumber!.toString() : "") + " " + (transactionFrequency) + (transactionFrequencyNumber! > 1 ? 's' : "")}</Text>
                 <MaterialCommunityIcons name="chevron-right" size={24} color={colors.text.secondary} />
             </Pressable>
           </View>
           <View className=" w-full border-hairline border-border"></View>
-          <Pressable className="flex flex-row items-center" onPress={() => setSelectCategoryModalVisible(true)}>
+          <Pressable className="flex flex-row items-center w-full p-3 rounded-xl bg-background-primary" onPress={() => setSelectCategoryModalVisible(true)}>
             <Text className="text-xl text-text-secondary">{selectedCategory === null ? "Select category" : selectedCategory.name}</Text>
-            <MaterialCommunityIcons name="chevron-right" size={24} color={colors.text.secondary} />
+            <MaterialCommunityIcons className="ms-auto" name="chevron-right" size={24} color={colors.text.secondary} />
           </Pressable>
-        </View >
+        </View>
+        <Pressable className="justify-center items-center p-4 w-full rounded-xl bg-brand-blue"
+          onPress={() => saveTransaction()}
+        >
+          <Text className="text-xl font-bold text-text-primary">Save transaction</Text>
+        </Pressable>
       </ScrollView>
       <SelectCategoryModal 
         transactionTypeIn={"expense"}
@@ -92,7 +136,11 @@ const AddTransaction = () => {
         setSelectCategoryModalVisible={setSelectCategoryModalVisible}
       />
       <TransactionFrequencyModal
-        transactionTypeIn={"expense"} 
+        transactionTypeIn={"expense"}
+        transactionFrequency={transactionFrequency}
+        setTransactionFrequency={setTransactionFrequency}
+        transactionFrequencyNumber={transactionFrequencyNumber} 
+        setTransactionFrequencyNumber={setTransactionFrequencyNumber}
         transactionFrequencyModalVisible={transactionFrequencyModalVisible}
         setTransactionFrequencyModalVisible={setTransactionFrequencyModalVisible}
       />

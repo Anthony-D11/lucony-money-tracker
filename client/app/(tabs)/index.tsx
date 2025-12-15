@@ -3,10 +3,13 @@ import { FlatList, Text, View, ScrollView, Dimensions } from "react-native";
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import {SafeAreaView, SafeAreaProvider} from 'react-native-safe-area-context';
 import { Link } from "expo-router";
+import { StatusBar } from 'expo-status-bar';
 import { colors } from "@/theme-config";
 import StatsCard from "@/components/StatsCard";
 import TransactionCard from "@/components/TransactionCard";
 import CustomLineChart from "@/components/Charts";
+import { useQuery } from "@/contexts/RealmContext";
+import { Transaction } from "@/models";
 
 export default function Index() {
   const data = [
@@ -62,9 +65,12 @@ export default function Index() {
   ];
   const screenWidth = Dimensions.get('window').width;
   const tabBarHeight = useBottomTabBarHeight();
+
+  let recentTransactions: Array<Transaction> = useQuery("Transaction");
   return (
     <SafeAreaProvider>
       <SafeAreaView>
+        <StatusBar style="dark"/>
         <ScrollView showsVerticalScrollIndicator={false} 
           className="flex flex-1 min-h-screen bg-background-primary"
           contentContainerStyle={{ 
@@ -91,11 +97,17 @@ export default function Index() {
             <Link className="text-text-link ms-auto" href="/"> {"See all  >"} </Link>
           </View>
           <View className="flex flex-col gap-3">
-            <TransactionCard id="001" type="expense" amount={85.20} currency="$" categoryId="001" createdAt="Today" note="Dinner with Alex"/>
-            <TransactionCard id="001" type="earning" amount={1285.20} currency="$" categoryId="001" createdAt="Today" note="Dinner with Alex"/>
-            <TransactionCard id="001" type="expense" amount={7236.23} currency="$" categoryId="001" createdAt="Today" note="Dinner with Alex"/>
-            <TransactionCard id="001" type="expense" amount={85.20} currency="$" categoryId="001" createdAt="Today" note="Dinner with Alex"/>
-            <TransactionCard id="001" type="expense" amount={85.20} currency="$" categoryId="001" createdAt="Today" note="Dinner with Alex"/>
+            {
+              recentTransactions.map((transaction) => (
+                <TransactionCard 
+                  type={transaction.type} 
+                  amount={transaction.amount} 
+                  currency={transaction.currency} 
+                  categoryId={transaction.categoryId}
+                  createdAt={transaction.createdAt} 
+                  note={transaction.note}/>
+              ))
+            }
           </View>
         </ScrollView>
       </SafeAreaView>

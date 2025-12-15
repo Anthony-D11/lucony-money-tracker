@@ -11,7 +11,7 @@
 
 1. Deploy the client side to Vercel and deploy the server side to Render
 2. When deploying angular project to Vercel, make sure the output directory points to the folder containing the html file
-3. 
+3. "align-text-top" native tailwind class doesn't help text appear from the top of the input.
 
 ## Usage
 
