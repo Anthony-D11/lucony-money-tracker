@@ -27,66 +27,67 @@ const SelectCategoryModal = ({ transactionTypeIn, setSelectedCategory, selectCat
       onRequestClose={setSelectCategoryModalVisible(false)}
     >
       <SafeAreaProvider>
-        <SafeAreaView className="flex flex-1">
-          <View className="flex flex-col gap-2  bg-background-primary">
-            <View className="flex-row items-center gap-4 p-4 bg-background-primary">
-              <Pressable onPress={() => setSelectCategoryModalVisible(false)}>
-                <MaterialCommunityIcons name="close" size={30} color={colors.text.primary} />
-              </Pressable>
-              <Text className="text-lg font-bold text-text-primary">Select Category</Text>
-            </View>
-            <View className="flex flex-col justify-center items-center gap-3 p-3 w-full bg-background-secondary rounded-xl">
-              <View className="flex flex-row gap-2 justify-center items-center p-1 w-full h-10 rounded-xl bg-background-primary">
-                <Pressable className={`flex-grow justify-center items-center h-full ${categoryType === "expense" ? "bg-background-secondary": ""} rounded-xl`}
-                  onPress={() => setCategoryType("expense")}
-                > 
-                  <Text className="text-text-primary">Expense</Text>
-                </Pressable>
-                <Pressable className={`flex-grow justify-center items-center h-full ${categoryType === "earning" ? "bg-background-secondary": ""} rounded-xl`}
-                  onPress={() => setCategoryType("earning")}
-                > 
-                  <Text className="text-text-primary">Earning</Text>
-                </Pressable>
-                <Pressable className={`flex-grow justify-center items-center h-full ${categoryType === "investment" ? "bg-background-secondary": ""} rounded-xl`}
-                  onPress={() => setCategoryType("investment")}
-                > 
-                  <Text className="text-text-primary">Investment</Text>
-                </Pressable>
-              </View>
-            </View>
-            <Pressable className="flex flex-row items-center gap-3 p-3 w-full bg-background-secondary rounded-xl"
-              onPress={() => setAddCategoryModalVisible(true)}
-            >
-              <View className="w-[40px] h-[40px] justify-center items-center rounded-full ">
-                <MaterialCommunityIcons name="plus-circle" size={24} color={colors.brand.blue}/>
-              </View>
-              <Text className="text-xl text-text-secondary">New category</Text>
+        <SafeAreaView className="flex flex-1 bg-background-secondary">
+          <View className="flex-row items-center gap-4 p-4 bg-background-primary">
+            <Pressable onPress={() => setSelectCategoryModalVisible(false)}>
+              <MaterialCommunityIcons name="close" size={30} color={colors.text.primary} />
             </Pressable>
-          </View>
-          {/* <ScrollView showsVerticalScrollIndicator={false}
-            className="flex flex-1 min-h-screen bg-background-primary"
-            contentContainerStyle={{
-              gap: 10,
-              justifyContent: "center",
-              alignItems: "center",
-              paddingInline: 10,
-              paddingTop: 10,
-              paddingBottom: tabBarHeight + 50,
-            }}
-          > */}
-            
-            
-            <FlatList
-              data={allowedCategoryList}
-              keyExtractor={(item) =>item._id.toString()}
-              renderItem={({item}) => (
-                <>
-                  <View className=" flex flex-row items-center gap-1 px-3 py-1 w-full rounded-xl bg-background-secondary">
-                    <MaterialCommunityIcons name="tag-search-outline" size={24} color={colors.text.third} />
+            <Text className="text-lg font-bold text-text-primary">Select Category</Text>
+          </View>          
+          <FlatList
+            data={allowedCategoryList}
+            keyExtractor={(item) =>item._id.toString()}
+            renderItem={({item, index}) => (
+              <View className="mx-3">
+                {index > 0 && (<View className=" w-full border-hairline border-border"></View>)}
+                <Pressable 
+                  className={`flex flex-row p-3 items-center gap-3 ${index === 0 ? "rounded-t-xl": ""} ${index === allowedCategoryList.length-1 ? "rounded-b-xl": ""} bg-background-primary`}
+                  onPress={() => {
+                    setSelectedCategory(item);
+                    setSelectCategoryModalVisible(false);
+                  }}
+                >
+                  <View className="w-[40px] h-[40px] justify-center items-center rounded-full" style={{backgroundColor: item.color}}>
+                    <MaterialCommunityIcons name={item.icon} size={24} color={colors.text.primary}/>
+                  </View>
+                  <Text className="text-xl text-text-secondary">{item.name}</Text>
+                </Pressable>
+              </View>
+            )}
+            ListHeaderComponent={
+              <View className="flex flex-col gap-3 p-3">
+                <View className="flex flex-col justify-center items-center gap-3 w-full rounded-xl">
+                  <View className="flex flex-row gap-2 justify-center items-center p-1 w-full h-10 rounded-xl bg-background-primary">
+                    <Pressable className={`flex-grow justify-center items-center h-full ${categoryType === "expense" ? "bg-background-secondary": ""} rounded-xl`}
+                      onPress={() => setCategoryType("expense")}
+                    > 
+                      <Text className="text-text-primary">Expense</Text>
+                    </Pressable>
+                    <Pressable className={`flex-grow justify-center items-center h-full ${categoryType === "earning" ? "bg-background-secondary": ""} rounded-xl`}
+                      onPress={() => setCategoryType("earning")}
+                    > 
+                      <Text className="text-text-primary">Earning</Text>
+                    </Pressable>
+                    <Pressable className={`flex-grow justify-center items-center h-full ${categoryType === "investment" ? "bg-background-secondary": ""} rounded-xl`}
+                      onPress={() => setCategoryType("investment")}
+                    > 
+                      <Text className="text-text-primary">Investment</Text>
+                    </Pressable>
+                  </View>
+                </View>
+                <View className="flex flex-col justify-center items-center gap-3 p-3 w-full rounded-xl bg-background-primary">
+                  <Pressable className="flex flex-row items-center gap-3 py-2 w-full rounded-xl"
+                    onPress={() => setAddCategoryModalVisible(true)}
+                  >
+                    <MaterialCommunityIcons name="plus-circle" size={24} color={colors.brand.blue}/>
+                    <Text className="text-xl text-text-secondary">New category</Text>
+                  </Pressable>
+                  <View className=" w-full border-hairline border-border"></View>
+                  <View className=" flex flex-row items-center gap-1 w-full rounded-xl">
                     <TextInput
-                        className=" flex-grow h-[40px] leading-[20px] text-xl font-base text-text-primary bg-background-secondary"
+                        className=" flex-grow h-[40px] leading-[20px] text-xl font-base text-text-primary"
                         placeholder="Search category"
-                        placeholderTextColor={colors.text.third}
+                        placeholderTextColor={colors.text.secondary}
                         value={searchText}
                         onChangeText={(text: string) => setSearchText(text)}
                         onFocus={() => setIsFocused(true)}
@@ -101,31 +102,18 @@ const SelectCategoryModal = ({ transactionTypeIn, setSelectedCategory, selectCat
                       </Pressable>
                     )}
                   </View>
-                  {/* {index > 0 && (<View className=" w-full border-hairline border-border"></View>)} */}
-                  <Pressable className="flex flex-row items-center gap-3"
-                    onPress={() => {
-                      setSelectedCategory(item);
-                      setSelectCategoryModalVisible(false);
-                    }}
-                  >
-                    <View className="w-[40px] h-[40px] justify-center items-center rounded-full" style={{backgroundColor: item.color}}>
-                      <MaterialCommunityIcons name={item.icon} size={24} color={colors.text.primary}/>
-                    </View>
-                    <Text className="text-xl text-text-secondary">{item.name}</Text>
-                  </Pressable>
-                </>
-              )}
-              ListEmptyComponent={
-                  <Text >No expenses found.</Text>
-              }
-              contentContainerStyle={{
-                display: "flex",
-                gap: 10,
-                flexGrow: 1,
-                paddingInline: 10,
-                backgroundColor: colors.background.primary
-              }}
-            />
+                </View>
+              </View>
+            }
+            ListEmptyComponent={
+                <Text className="p-3">No categories found. Try adding a new category!</Text>
+            }
+            contentContainerStyle={{
+              display: "flex",
+              flexGrow: 1,
+              backgroundColor: colors.background.secondary,
+            }}
+          />
           <AddCategoryModal 
             categoryTypeIn={categoryType} 
             addCategoryModalVisible={addCategoryModalVisible}

@@ -35,7 +35,7 @@ const AddCategoryModal = ({ categoryTypeIn, addCategoryModalVisible, setAddCateg
       }}
     >
       <SafeAreaProvider>
-        <SafeAreaView>
+        <SafeAreaView className="flex flex-1 bg-background-secondary">
           <View className="flex-row items-center gap-4 p-4 bg-background-primary">
             <Pressable onPress={() => setAddCategoryModalVisible(false)}>
               <MaterialCommunityIcons name="chevron-left" size={35} color={colors.text.primary} />
@@ -49,7 +49,7 @@ const AddCategoryModal = ({ categoryTypeIn, addCategoryModalVisible, setAddCateg
             </Pressable>
           </View>
           <ScrollView showsVerticalScrollIndicator={false}
-            className="flex flex-1 min-h-screen bg-background-primary"
+            className="flex flex-grow"
             contentContainerStyle={{
               gap: 10,
               justifyContent: "center",
@@ -59,7 +59,7 @@ const AddCategoryModal = ({ categoryTypeIn, addCategoryModalVisible, setAddCateg
               paddingBottom: tabBarHeight + 50,
             }}
           >
-            <View className="flex flex-col justify-center items-start gap-3 p-4 w-full rounded-xl bg-background-secondary">
+            <View className="flex flex-col justify-center items-start gap-3 p-4 w-full rounded-xl bg-background-primary">
               <TextInput
                 className="w-full leading-[40px] text-4xl font-bold text-text-primary"
                 placeholder="Category Name"

@@ -58,7 +58,7 @@ const TransactionFrequencyModal = ({
       }}
     >
       <SafeAreaProvider>
-        <SafeAreaView>
+        <SafeAreaView className="flex flex-1 bg-background-secondary">
           <View className="flex-row items-center gap-4 p-4 bg-background-primary">
             <Pressable onPress={() => setTransactionFrequencyModalVisible(false)}>
               <MaterialCommunityIcons name="close" size={30} color={colors.text.primary} />
@@ -74,7 +74,8 @@ const TransactionFrequencyModal = ({
             </Pressable>
           </View>
           <ScrollView showsVerticalScrollIndicator={false}
-            className="flex flex-1 min-h-screen bg-background-primary"
+            className="flex flex-grow"
+            nestedScrollEnabled={true}
             contentContainerStyle={{
               gap: 10,
               justifyContent: "center",
@@ -84,7 +85,7 @@ const TransactionFrequencyModal = ({
               paddingBottom: tabBarHeight + 50,
             }}
           >
-            <View className="flex flex-col w-full rounded-xl bg-background-secondary">
+            <View className="flex flex-col w-full rounded-xl bg-background-primary">
               { 
                 transactionFrequencyPickerVisible ?
                   (transactionFrequencies.map((item, index) => (
@@ -118,23 +119,9 @@ const TransactionFrequencyModal = ({
               }
             </View>
             {transactionFrequency !== "never" &&
-            <View className="flex flex-col w-full rounded-xl bg-background-secondary">
+            <View className="flex flex-col w-full rounded-xl bg-background-primary">
               <View className="flex flex-row items-center z-50 gap-3 p-4">
                 <Text className="text-xl text-text-primary">Every</Text>
-                {/* <TextInput 
-                  className="flex-grow text-xl text-right"
-                  value={transactionFrequencyInterval?.toString()}
-                  onChangeText={(text) => {
-                    const cleanedInput = text.replace(/[^0-9]/g, "");
-                    if(cleanedInput) setTransactionFrequencyInterval(parseInt(cleanedInput, 10));
-                  }}
-                  keyboardType="number-pad"
-                  maxLength={3}
-                  style={{
-                    paddingVertical: 0,
-                    includeFontPadding: false
-                  }}
-                /> */}
                 <DropDownPicker
                   listMode="SCROLLVIEW"
                   open={transactionFrequencyIntervalPickerVisible}
@@ -143,8 +130,16 @@ const TransactionFrequencyModal = ({
                   setOpen={setTransactionFrequencyIntervalPickerVisible}
                   setValue={setTransactionFrequencyInterval}
                   setItems={setTransactionFrequencyIntervals}
+                  scrollViewProps={{
+                    nestedScrollEnabled: true, 
+                  }}
+                  style={{
+                    borderWidth: 0,
+                    backgroundColor: colors.background.secondary
+                  }}
                   containerStyle={{
-                    flex: 1,
+                    width: 70,
+                    marginLeft: "auto"
                   }}
                 />
                 <Text className="text-xl text-text-primary">
