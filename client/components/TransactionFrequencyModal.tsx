@@ -1,33 +1,52 @@
-import { View, Text, ScrollView, Pressable, Modal } from 'react-native'
+import { View, Text, ScrollView, Pressable, Modal, TextInput } from 'react-native'
 import React, { useState } from 'react';
-import { Picker } from '@react-native-picker/picker';
-import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context'
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import DropDownPicker from 'react-native-dropdown-picker';
+
 
 import { colors } from "@/theme-config";
+import { TransactionFrequency } from '@/models';
+
+interface TransactionFrequencyModalProps {
+  transactionTypeIn: string; 
+  transactionFrequency: TransactionFrequency; 
+  setTransactionFrequency: (transactionFrequency: TransactionFrequency) => void;
+  transactionFrequencyInterval: number | null; 
+  setTransactionFrequencyInterval: (transactionFrequencyInterval: number | null) => void;
+  transactionEndDate: Date | null;
+  setTransactionEndDate: (transactionEndDate: Date | null) => void;
+  transactionFrequencyModalVisible: boolean;
+  setTransactionFrequencyModalVisible: (transactionFrequencyModalVisible: boolean) => void;
+}
 
 const TransactionFrequencyModal = ({ 
     transactionTypeIn, 
     transactionFrequency, 
     setTransactionFrequency,
-    transactionFrequencyNumber, 
-    setTransactionFrequencyNumber,
+    transactionFrequencyInterval, 
+    setTransactionFrequencyInterval,
+    transactionEndDate,
+    setTransactionEndDate,
     transactionFrequencyModalVisible, 
     setTransactionFrequencyModalVisible 
-  }: any) => {
-  const tabBarHeight = useBottomTabBarHeight();
+  }: TransactionFrequencyModalProps) => {
+  const tabBarHeight = 80;//useBottomTabBarHeight();
   const dictionary = {
     "never": "Never",
     "day": "Daily",
     "month": "Monthly",
     "year": "Yearly"
   }
-  const transactionFrequencies: string[] = ["never", "day", "month", "year"];
-  const transactionFrequencyNumbers = Array.from({length: 1000}, (_, i) => i + 1);
-
+  const transactionFrequencies: TransactionFrequency[] = ["never", "day", "month", "year"];
+  const [transactionFrequencyIntervals, setTransactionFrequencyIntervals] = useState(
+      Array.from({length: 10}, (_, i) => {
+        return {label: (i+1).toString(), value: i+1};
+      }));
+  
   const [transactionFrequencyPickerVisible, setTransactionFrequencyPickerVisible] = useState(true);
-  const [transactionFrequencyNumberPickerVisible, setTransactionFrequencyNumberPickerVisible] = useState(false);
+  const [transactionFrequencyIntervalPickerVisible, setTransactionFrequencyIntervalPickerVisible] = useState(false);
 
   return (  
     <Modal
@@ -47,7 +66,7 @@ const TransactionFrequencyModal = ({
             <Text className="text-lg font-bold text-text-primary">Transaction Frequency</Text>
             <Pressable className="ms-auto"
               onPress={() => {
-                if (transactionFrequency == "never") setTransactionFrequencyNumber(null);
+                if (transactionFrequency === "never") setTransactionFrequencyInterval(null);
                 setTransactionFrequencyModalVisible(false);
               }}
             >
@@ -72,7 +91,11 @@ const TransactionFrequencyModal = ({
                     <>
                       { index !== 0 && <View className=" w-full border-hairline border-border"></View> }
                       <Pressable className="flex flex-row items-center gap-3 p-4"
-                        onPress={() => setTransactionFrequency(item)}
+                        onPress={() => {
+                          setTransactionFrequencyInterval(1);
+                          setTransactionFrequency(item);
+                          if (item === "never") setTransactionFrequencyInterval(null);
+                        }}
                       >
                         { item === transactionFrequency ? 
                           <MaterialCommunityIcons name="check" size={24} color={colors.text.primary} /> : 
@@ -86,7 +109,7 @@ const TransactionFrequencyModal = ({
                   <Pressable className="flex flex-row items-center p-4" 
                     onPress={() => {
                       setTransactionFrequencyPickerVisible(true);
-                      setTransactionFrequencyNumberPickerVisible(false);
+                      setTransactionFrequencyIntervalPickerVisible(false);
                     }}
                   >
                     <Text className="text-xl text-text-primary">Frequency</Text>
@@ -95,29 +118,39 @@ const TransactionFrequencyModal = ({
               }
             </View>
             {transactionFrequency !== "never" &&
-              <View className="flex flex-col w-full rounded-xl bg-background-secondary overflow-hidden">
-              <Pressable className="flex flex-row items-center gap-3 p-4"
-                onPress={() => {
-                  setTransactionFrequencyNumberPickerVisible(!transactionFrequencyNumberPickerVisible);
-                  setTransactionFrequencyPickerVisible(false);
-                }}
-              >
+            <View className="flex flex-col w-full rounded-xl bg-background-secondary">
+              <View className="flex flex-row items-center z-50 gap-3 p-4">
                 <Text className="text-xl text-text-primary">Every</Text>
-                <Text className="ms-auto text-xl text-text-primary">
-                  {transactionFrequencyNumber > 1 ? transactionFrequencyNumber.toString() : ""} {transactionFrequency}{transactionFrequencyNumber > 1 && 's'}
+                {/* <TextInput 
+                  className="flex-grow text-xl text-right"
+                  value={transactionFrequencyInterval?.toString()}
+                  onChangeText={(text) => {
+                    const cleanedInput = text.replace(/[^0-9]/g, "");
+                    if(cleanedInput) setTransactionFrequencyInterval(parseInt(cleanedInput, 10));
+                  }}
+                  keyboardType="number-pad"
+                  maxLength={3}
+                  style={{
+                    paddingVertical: 0,
+                    includeFontPadding: false
+                  }}
+                /> */}
+                <DropDownPicker
+                  listMode="SCROLLVIEW"
+                  open={transactionFrequencyIntervalPickerVisible}
+                  value={transactionFrequencyInterval}
+                  items={transactionFrequencyIntervals}
+                  setOpen={setTransactionFrequencyIntervalPickerVisible}
+                  setValue={setTransactionFrequencyInterval}
+                  setItems={setTransactionFrequencyIntervals}
+                  containerStyle={{
+                    flex: 1,
+                  }}
+                />
+                <Text className="text-xl text-text-primary">
+                  {transactionFrequency}{transactionFrequencyInterval! > 1 && 's'}
                 </Text>
-              </Pressable>
-              { transactionFrequencyNumberPickerVisible && 
-                <Picker
-                  mode="dropdown"
-                  selectedValue={transactionFrequencyNumber}
-                  onValueChange={(value) => setTransactionFrequencyNumber(value)}
-                  // style={{borderRadius: "0.75rem", padding: "0.75rem", backgroundColor: colors.background.secondary, color: colors.text.primary}}
-                  // itemStyle={{color: colors.text.primary, borderRadius: "0.75rem"}}
-                >
-                  {transactionFrequencyNumbers.map((number) => <Picker.Item key={number} label={number.toString()} value={number}/>)}
-                </Picker>
-              }
+              </View>
             </View>}
           </ScrollView>
         </SafeAreaView>

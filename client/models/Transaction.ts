@@ -1,16 +1,23 @@
 import { Realm } from '@realm/react'
 
+export type TransactionType = "expense" | "earning" | "investment";
+export type InvestmentAction = "buy" | "sell";
+export type TransactionFrequency = "never" | "day" | "month" | "year";
+
 export class Transaction extends Realm.Object<Transaction> {
   _id!: Realm.BSON.ObjectId;
-  type!: "expense" | "earning" | "investment";
+  type!: TransactionType;
   amount!: Realm.BSON.Decimal128;
   currency!: string;
   categoryId!: string;
   createdAt!: Date;
+  frequency!: string;
+  interval?: number;
+  endDate?: Date;
   note!: string;
-  action?: "buy" | "sell";
-  price?: number;
-  exchangeRate?: string;
+  action?: InvestmentAction;
+  amountAssets?: Realm.BSON.Decimal128;
+  unitAssets?: string;
 
   static schema = {
     name: 'Transaction',
@@ -22,10 +29,13 @@ export class Transaction extends Realm.Object<Transaction> {
       currency: 'string',
       categoryId: 'objectId',
       createdAt: 'date',
+      frequency: 'string',
+      interval: 'int?',
+      endDate: 'date?',
       note: 'string',
       action: 'string?',
-      price: 'decimal128?',
-      exchangeRate: 'string?'
+      amountAssets: 'decimal128?',
+      unitAssets: 'string?'
 
     },
   };
@@ -35,11 +45,14 @@ export class Transaction extends Realm.Object<Transaction> {
     amountIn: string,
     currencyIn: string, 
     categoryIdIn: Realm.BSON.ObjectId, 
-    createdAtIn: Date, 
+    createdAtIn: Date,
+    frequencyIn: string,
+    intervalIn: number | null,
+    endDateIn: Date | null, 
     noteIn: string,
     actionIn: string | null = null,
-    priceIn: number | null = null,
-    exchangeRateIn: string | null = null
+    amountAssetsIn: string,
+    unitAssetsIn: string | null = null
   ) {
     return {
       _id: new Realm.BSON.ObjectId(),
@@ -48,10 +61,13 @@ export class Transaction extends Realm.Object<Transaction> {
       currency: currencyIn, 
       categoryId: categoryIdIn, 
       createdAt: createdAtIn, 
+      frequency: frequencyIn,
+      interval: intervalIn,
+      endDate: endDateIn,
       note: noteIn,
       action: actionIn,
-      price: priceIn,
-      exchangeRate: exchangeRateIn
+      amountAssets: new Realm.BSON.Decimal128(amountAssetsIn),
+      unitAssets: unitAssetsIn
     };
   }
 }

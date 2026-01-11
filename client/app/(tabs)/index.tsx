@@ -66,7 +66,7 @@ export default function Index() {
   const screenWidth = Dimensions.get('window').width;
   const tabBarHeight = useBottomTabBarHeight();
 
-  let recentTransactions: Array<Transaction> = useQuery("Transaction");
+  const recentTransactions: Array<Transaction> = useQuery(Transaction);
   return (
     <SafeAreaProvider>
       <SafeAreaView>
@@ -87,7 +87,7 @@ export default function Index() {
           <View className="p-4 bg-background-secondary rounded-xl border ">
             <CustomLineChart expenseData={expenseData} incomeData={incomeData} investmentData={investmentData}/>
           </View >
-          <View className="flex flex-row flex-wrap">
+          <View className="flex flex-row flex-wrap gap-4">
             {
               data.map((item) => (<StatsCard name={item.name} amount={item.amount} time={item.time} description={item.description} />))
             }

@@ -1,5 +1,5 @@
 import { View, Text, ScrollView, TextInput, Pressable, Modal } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context'
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
@@ -9,14 +9,15 @@ import appData from "../assets/data/app_data.json";
 import { useRealm } from '@/contexts/RealmContext';
 import { Category } from '@/models';
 
-const AddCategoryModal = ({ transactionTypeIn, addCategoryModalVisible, setAddCategoryModalVisible }: any) => {
+const AddCategoryModal = ({ categoryTypeIn, addCategoryModalVisible, setAddCategoryModalVisible }: any) => {
   const realm = useRealm();
 
-  const tabBarHeight = useBottomTabBarHeight();
+  const tabBarHeight = 80; //useBottomTabBarHeight();
   const [categoryName, setCategoryName] = useState("");
-  const [categoryType, setCategoryType] = useState("default");
+  const [categoryType, setCategoryType] = useState(categoryTypeIn);
   const [categoryColor, setCategoryColor] = useState(appData["colors"][0]);
   const [categoryIcon, setCategoryIcon] = useState("");
+  useEffect(() => setCategoryType(categoryTypeIn), [categoryTypeIn])
 
   const saveCategory = () => {
     realm.write(() => {
@@ -73,13 +74,18 @@ const AddCategoryModal = ({ transactionTypeIn, addCategoryModalVisible, setAddCa
                 <MaterialCommunityIcons name="format-list-bulleted-type" size={30} color={colors.text.secondary} />
                 <View className="flex flex-col gap-2">
                   <Text className="text-sm text-text-third">Category Type</Text>
-                  <View className="flex flex-row gap-2 justify-center items-center p-1 h-12 rounded-xl bg-background-primary">
-                    <Pressable className={`justify-center items-center p-2 rounded-xl ${categoryType === "default" && "bg-background-secondary"}`}
-                      onPress={() => setCategoryType("default")}  
+                  <View className="flex flex-row gap-2 justify-center items-center p-1 w-full h-10 rounded-xl bg-background-primary">
+                    <Pressable className={`flex-grow justify-center items-center h-full ${categoryType === "expense" ? "bg-background-secondary": ""} rounded-xl`}
+                      onPress={() => setCategoryType("expense")}
                     > 
-                      <Text className="text-text-primary">Expense/Earning</Text>
+                      <Text className="text-text-primary">Expense</Text>
                     </Pressable>
-                    <Pressable className={`justify-center items-center p-2 rounded-xl ${categoryType === "investment" && "bg-background-secondary"}`}
+                    <Pressable className={`flex-grow justify-center items-center h-full ${categoryType === "earning" ? "bg-background-secondary": ""} rounded-xl`}
+                      onPress={() => setCategoryType("earning")}
+                    > 
+                      <Text className="text-text-primary">Earning</Text>
+                    </Pressable>
+                    <Pressable className={`flex-grow justify-center items-center h-full ${categoryType === "investment" ? "bg-background-secondary": ""} rounded-xl`}
                       onPress={() => setCategoryType("investment")}
                     > 
                       <Text className="text-text-primary">Investment</Text>

@@ -1,6 +1,6 @@
 import { createRealmContext } from "@realm/react";
-import { Category, Transaction } from "@/models";
+import { Category, Currency, Transaction } from "@/models";
 
 export const {RealmProvider, useRealm, useQuery, useObject} = createRealmContext({
-  schema: [Transaction, Category],
+  schema: [Transaction, Category, Currency],
 })

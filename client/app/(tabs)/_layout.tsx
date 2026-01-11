@@ -1,5 +1,5 @@
-import { Tabs } from "expo-router";
-import { View, Text } from "react-native";
+import { router, Tabs } from "expo-router";
+import { View, Text, Pressable } from "react-native";
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import themeOptions from '../../theme-config';
 
@@ -49,10 +49,14 @@ export default function _Layout() {
                 }}
             />
             <Tabs.Screen
-                name="add_transaction"
+                name="add"
                 options={{
                     headerShown: false,
-                    tabBarIcon: () => (<AddTransactionButton/>)
+                    tabBarButton: (props) => (
+                        <Pressable {...props} onPress={(e) => router.push("/add_transaction")} >
+                            <AddTransactionButton/>
+                        </Pressable>
+                    )
                 }}
             />
             <Tabs.Screen
